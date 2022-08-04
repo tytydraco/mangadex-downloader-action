@@ -34,7 +34,7 @@ jobs:
         run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
       
       - name: Zip
-        run: zip -r9 "${{ inputs.name }}-${{ steps.date.outputs.date }}.zip" working/*
+        run: cd working && zip -r9 ../"${{ inputs.name }}-${{ steps.date.outputs.date }}.zip" .
       
       - name: Upload
         uses: marvinpinto/action-automatic-releases@latest
