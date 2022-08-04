@@ -27,7 +27,7 @@ jobs:
         run: |
           mkdir working
           cd working
-          python3 -m mangadex_downloader "${{ inputs.url }}" --unsafe
+          python3 -m mangadex_downloader --language en "${{ inputs.url }}" --unsafe
       
       - name: Get current date
         id: date
