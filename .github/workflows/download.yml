@@ -1,0 +1,43 @@
+name: Download
+
+on:
+  workflow_dispatch:
+    inputs:
+      name:
+        description: Archive name (no spaces)
+        required: true
+        type: string
+      url:
+        description: MangaDex URL
+        required: true
+        type: string    
+
+jobs:
+  download:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-python@v4
+      
+      - name: Install
+        run: python3 -m pip install mangadex-downloader
+
+      - name: Download
+        run: |
+          mkdir working
+          cd working
+          python3 -m mangadex_downloader "${{ inputs.url }}" --unsafe
+      
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+      
+      - name: Zip
+        run: zip -r9 "${{ inputs.name }}-${{ steps.date.outputs.date }}.zip" working/*
+      
+      - name: Upload
+        uses: marvinpinto/action-automatic-releases@latest
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          automatic_release_tag: "${{ inputs.name }}-${{ steps.date.outputs.date }}"
+          prerelease: false
+          files: "${{ inputs.name }}-${{ steps.date.outputs.date }}.zip"
