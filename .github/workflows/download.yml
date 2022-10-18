@@ -10,7 +10,11 @@ on:
       url:
         description: MangaDex URL
         required: true
-        type: string    
+        type: string
+      groupid:
+        description: Group ID
+        required: false
+        type: string
 
 jobs:
   download:
@@ -27,7 +31,9 @@ jobs:
         run: |
           mkdir working
           cd working
-          python3 -m mangadex_downloader --language en "${{ inputs.url }}"
+          params=()
+          [[ -n "${{ inputs.groupid }}" ]] && params+=(-g "${{ inputs.groupid }}")
+          python3 -m mangadex_downloader --language en "${{ inputs.url }}" "${params[@]}"
       
       - name: Get current date
         id: date
