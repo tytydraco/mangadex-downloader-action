@@ -15,6 +15,11 @@ on:
         description: Group ID
         required: false
         type: string
+      format:
+        description: Download format
+        required: true
+        type: string
+        default: "raw"
 
 jobs:
   download:
@@ -33,7 +38,7 @@ jobs:
           cd working
           params=()
           [[ -n "${{ inputs.groupid }}" ]] && params+=(-g "${{ inputs.groupid }}")
-          python3 -m mangadex_downloader --language en "${{ inputs.url }}" "${params[@]}"
+          python3 -m mangadex_downloader --language en --format "${{ inputs.format }}" "${{ inputs.url }}" "${params[@]}"
       
       - name: Get current date
         id: date
